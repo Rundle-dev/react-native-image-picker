@@ -172,15 +172,12 @@ NSData* extractImageData(UIImage* image){
 
     float quality = [self.options[@"quality"] floatValue];
     if (![image isEqual:newImage] || (quality >= 0 && quality < 1)) {
-        if ([fileType isEqualToString:@"jpg"]) {
-            data = UIImageJPEGRepresentation(newImage, quality);
-        } else if ([fileType isEqualToString:@"png"]) {
-            data = UIImagePNGRepresentation(newImage);
-        }
+        // force jpeg
+        data = UIImageJPEGRepresentation(newImage, quality);
     }
     
     NSMutableDictionary *asset = [[NSMutableDictionary alloc] init];
-    asset[@"type"] = [@"image/" stringByAppendingString:fileType];
+    asset[@"type"] = @"image/jpeg"; // force jpeg
 
     NSString *fileName = [self getImageFileName:fileType];
     NSString *path = [[NSTemporaryDirectory() stringByStandardizingPath] stringByAppendingPathComponent:fileName];
