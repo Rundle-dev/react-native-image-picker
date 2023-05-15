@@ -276,11 +276,12 @@ public class Utils {
     }
 
     static Bitmap.CompressFormat getBitmapCompressFormat(String mimeType) {
-        switch (mimeType) {
-            case "image/jpeg": return Bitmap.CompressFormat.JPEG;
-            case "image/png": return Bitmap.CompressFormat.PNG;
+        // force webp format
+        if (Build.VERSION.SDK_INT >= 30) {
+            return Bitmap.CompressFormat.WEBP_LOSSY;
+        } else {
+            return Bitmap.CompressFormat.WEBP;
         }
-        return Bitmap.CompressFormat.JPEG;
     }
 
     static String getFileTypeFromMime(String mimeType) {
@@ -400,10 +401,9 @@ public class Utils {
         map.putString("uri", uri.toString());
         map.putDouble("fileSize", getFileSize(uri, context));
         map.putString("fileName", fileName);
-        map.putString("type", getMimeTypeFromFileUri(uri));
         map.putInt("width", dimensions[0]);
         map.putInt("height", dimensions[1]);
-        map.putString("type", getMimeType(uri, context));
+        map.putString("type", "image/webp"); // force webp
 
         if (options.includeBase64) {
             map.putString("base64", getBase64String(uri, context));
